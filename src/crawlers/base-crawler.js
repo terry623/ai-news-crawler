@@ -12,11 +12,6 @@ class BaseCrawler {
       timestamp: new Date().toISOString(),
       categories: {},
       overallRankings: [],
-      metadata: {
-        crawlDuration: 0,
-        totalModels: 0,
-        lastUpdated: null,
-      },
     };
   }
 
@@ -47,13 +42,8 @@ class BaseCrawler {
       await this.initializeCrawler();
       await this.crawler.run([this.siteConfig.leaderboardUrl]);
 
-      this.results.metadata.crawlDuration = Date.now() - startTime;
-      this.results.metadata.totalModels = this.countTotalModels();
-
       await this.saveResults();
-      Logger.success(
-        `Crawl completed for ${this.siteConfig.name} in ${this.results.metadata.crawlDuration}ms`
-      );
+      Logger.success(`Crawl completed for ${this.siteConfig.name}`);
 
       return this.results;
     } catch (error) {

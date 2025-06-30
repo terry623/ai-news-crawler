@@ -25,7 +25,6 @@ class CrawlerManager {
     const results = await crawler.crawl();
 
     Logger.success(`Successfully crawled ${siteConfig.name}`);
-    Logger.info(`Total models extracted: ${results.metadata.totalModels}`);
     Logger.info(
       `Categories found: ${Object.keys(results.categories).join(", ")}`
     );

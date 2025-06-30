@@ -134,7 +134,6 @@ class LMArenaCrawler extends BaseCrawler {
     }
 
     return {
-      lastUpdated,
       models: models.slice(0, 10), // Limit to top 10 for each category
     };
   }
@@ -168,13 +167,7 @@ class LMArenaCrawler extends BaseCrawler {
       votes = this.parseNumber(numbers[1]);
     }
 
-    return {
-      rank: rank || 0,
-      name,
-      score,
-      votes,
-      url,
-    };
+    return name;
   }
 
   extractModelFromTableRow($row, $) {
@@ -245,11 +238,7 @@ class LMArenaCrawler extends BaseCrawler {
         }
       });
 
-      this.results.overallRankings.push({
-        rank: overallRank,
-        model: modelName,
-        scores,
-      });
+      this.results.overallRankings.push(modelName);
     });
 
     Logger.info(

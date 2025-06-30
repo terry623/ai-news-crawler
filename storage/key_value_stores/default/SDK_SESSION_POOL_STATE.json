@@ -3,7 +3,7 @@
   "retiredSessionsCount": 0,
   "sessions": [
     {
-      "id": "session_mkzqlJ8Sz4",
+      "id": "session_aMh0Igljlj",
       "cookieJar": {
         "version": "tough-cookie@5.1.2",
         "storeType": "MemoryCookieStore",
@@ -14,15 +14,15 @@
         "cookies": [
           {
             "key": "__cf_bm",
-            "value": "lpR7up6gI4pTo25VHGl6fzMetwTMgbqxpIdFhwGuxuI-1751298889-1.0.1.1-AB7Prdts_4wtjVi7KIXXFp7kD2X93.L64ZNKtC6mhaLh911HRVF.Y.ZUjaz11EtO_FQEUX0HrdfUEdnpDjJLh_mCh1jEd7yCNBHWRP6ahQU",
-            "expires": "2025-06-30T16:24:49.000Z",
+            "value": "DmK6lBL3364li.HI2uvQM4aVLe4TxbGdfUgbvS5BSdo-1751299978-1.0.1.1-qltgw0H1qzHaco3wGbYm2SsbockRvCVgW2PfbRzCfACIARiaunnDED4aWXesHXumCjKraXEssqELuYQXUjwtcwJ6PWopSZN7joALc_VfZfw",
+            "expires": "2025-06-30T16:42:58.000Z",
             "domain": "lmarena.ai",
             "path": "/",
             "secure": true,
             "httpOnly": true,
             "hostOnly": false,
-            "creation": "2025-06-30T15:54:49.578Z",
-            "lastAccessed": "2025-06-30T15:54:49.578Z",
+            "creation": "2025-06-30T16:12:59.455Z",
+            "lastAccessed": "2025-06-30T16:12:59.455Z",
             "sameSite": "none"
           }
         ]
@@ -30,8 +30,8 @@
       "userData": {},
       "maxErrorScore": 3,
       "errorScoreDecrement": 0.5,
-      "expiresAt": "2025-06-30T16:44:47.806Z",
-      "createdAt": "2025-06-30T15:54:47.806Z",
+      "expiresAt": "2025-06-30T17:02:57.610Z",
+      "createdAt": "2025-06-30T16:12:57.610Z",
       "usageCount": 1,
       "maxUsageCount": 50,
       "errorScore": 0

@@ -15,6 +15,11 @@ const sites = {
       },
     ],
   },
+  swebench: {
+    name: "SWE-Bench",
+    baseUrl: "https://swe-rebench.com",
+    leaderboardUrl: "https://swe-rebench.com/leaderboard",
+  },
   // Future sites can be added here
   // llmStats: {
   //   name: 'LLM Stats',

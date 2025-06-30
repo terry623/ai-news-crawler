@@ -1,11 +1,13 @@
 const Logger = require("./utils/logger");
 const sites = require("./config/sites");
 const LMArenaCrawler = require("./crawlers/lmarena-crawler");
+const SWEBenchCrawler = require("./crawlers/swebench-crawler");
 
 class CrawlerManager {
   constructor() {
     this.crawlers = {
       lmarena: LMArenaCrawler,
+      swebench: SWEBenchCrawler,
     };
   }
 

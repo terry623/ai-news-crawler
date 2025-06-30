@@ -10,6 +10,7 @@ on:
         options:
           - ''
           - 'lmarena'
+          - 'swebench'
         default: ''
       save_to_repo:
         description: 'Save results to repository (in addition to artifacts)'

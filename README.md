@@ -114,10 +114,42 @@ The crawler saves data in two formats:
 
 ## GitHub Actions Integration
 
-The crawler is designed to work seamlessly in GitHub Actions:
+This project includes a ready-to-use GitHub Action that can be manually triggered to run the crawler and store results. 
+
+### Quick Start
+
+1. The GitHub Action is already configured in `.github/workflows/crawl-data.yml`
+2. Go to your repository's **Actions** tab
+3. Select **AI News Crawler** workflow
+4. Click **Run workflow** to manually trigger it
+
+### Features
+
+- 🎯 **Manual trigger** - Run on-demand via GitHub interface
+- ⚙️ **Flexible options** - Choose specific sites or crawl all
+- 💾 **Dual storage** - Save to both Action artifacts and repository
+- 📊 **Detailed reports** - Automatic execution summaries
+- 🔄 **Error handling** - Saves partial results even if some sites fail
+
+### Usage Options
+
+**Basic usage** (artifacts only):
+- Results saved as downloadable artifacts for 90 days
+- Perfect for temporary data collection
+
+**Advanced usage** (with repository storage):
+- Results also committed to `crawl-data` branch
+- Permanent storage with version history
+- Ideal for long-term data tracking
+
+For detailed instructions, see [GitHub Action Usage Guide](docs/github-action-usage.md).
+
+### Custom GitHub Actions
+
+You can also create your own workflows:
 
 ```yaml
-name: Crawl LLM Leaderboards
+name: Custom Crawl Schedule
 
 on:
   schedule:
@@ -128,24 +160,28 @@ jobs:
   crawl:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: '18'
+          cache: 'npm'
           
       - name: Install dependencies
-        run: npm install
+        run: npm ci
         
       - name: Run crawler
         run: npm run crawl:all
+        env:
+          DEBUG: 1
         
       - name: Upload results
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
-          name: leaderboard-data
+          name: leaderboard-data-${{ github.run_number }}
           path: data/
+          retention-days: 90
 ```
 
 ## Project Structure

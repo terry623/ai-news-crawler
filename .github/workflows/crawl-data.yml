@@ -1,0 +1,134 @@
+name: AI News Crawler
+
+on:
+  workflow_dispatch:
+    inputs:
+      site:
+        description: 'Specific site to crawl (leave empty for all sites)'
+        required: false
+        type: choice
+        options:
+          - ''
+          - 'lmarena'
+        default: ''
+      save_to_repo:
+        description: 'Save results to repository (in addition to artifacts)'
+        required: false
+        type: boolean
+        default: false
+
+jobs:
+  crawl:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        
+    - name: Install dependencies
+      run: npm ci
+      
+    - name: Create data directory
+      run: mkdir -p data
+      
+    - name: Run crawler
+      run: |
+        if [ -z "${{ github.event.inputs.site }}" ]; then
+          echo "Running crawler for all sites..."
+          npm run crawl:all
+        else
+          echo "Running crawler for site: ${{ github.event.inputs.site }}"
+          npm run crawl:${{ github.event.inputs.site }}
+        fi
+      env:
+        DEBUG: 1
+        
+    - name: List generated files
+      run: |
+        echo "Generated files in data directory:"
+        ls -la data/ || echo "No files generated"
+        
+    - name: Create crawl summary
+      run: |
+        echo "# Crawl Summary" > crawl-summary.md
+        echo "- **Timestamp**: $(date -u '+%Y-%m-%d %H:%M:%S UTC')" >> crawl-summary.md
+        echo "- **Trigger**: Manual (workflow_dispatch)" >> crawl-summary.md
+        echo "- **Site**: ${{ github.event.inputs.site || 'all' }}" >> crawl-summary.md
+        echo "- **Files generated**:" >> crawl-summary.md
+        if [ -d "data" ] && [ "$(ls -A data)" ]; then
+          for file in data/*; do
+            if [ -f "$file" ]; then
+              size=$(stat -f%z "$file" 2>/dev/null || stat -c%s "$file" 2>/dev/null || echo "unknown")
+              echo "  - $(basename "$file") (${size} bytes)" >> crawl-summary.md
+            fi
+          done
+        else
+          echo "  - No files generated" >> crawl-summary.md
+        fi
+        
+    - name: Upload crawl results as artifacts
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: crawl-results-${{ github.run_number }}
+        path: |
+          data/
+          crawl-summary.md
+          storage/
+        retention-days: 90
+        
+    - name: Commit results to repository
+      if: github.event.inputs.save_to_repo == 'true'
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        
+        # Create or switch to data branch
+        git checkout -B crawl-data || git checkout crawl-data
+        
+        # Copy data files to a timestamped directory
+        timestamp=$(date -u '+%Y%m%d-%H%M%S')
+        mkdir -p "crawl-results/$timestamp"
+        
+        if [ -d "data" ] && [ "$(ls -A data)" ]; then
+          cp -r data/* "crawl-results/$timestamp/"
+        fi
+        
+        cp crawl-summary.md "crawl-results/$timestamp/"
+        
+        # Also update latest results
+        mkdir -p crawl-results/latest
+        if [ -d "data" ] && [ "$(ls -A data)" ]; then
+          cp -r data/* crawl-results/latest/
+        fi
+        cp crawl-summary.md crawl-results/latest/
+        
+        # Commit changes
+        git add crawl-results/
+        git commit -m "Add crawl results from $timestamp" || echo "No changes to commit"
+        git push origin crawl-data || git push --set-upstream origin crawl-data
+        
+    - name: Create job summary
+      if: always()
+      run: |
+        echo "## 🤖 AI News Crawler Results" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        cat crawl-summary.md >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "### 📁 Artifacts" >> $GITHUB_STEP_SUMMARY
+        echo "- Results have been uploaded as artifacts and will be available for 90 days" >> $GITHUB_STEP_SUMMARY
+        if [ "${{ github.event.inputs.save_to_repo }}" == "true" ]; then
+          echo "- Results have also been committed to the \`crawl-data\` branch" >> $GITHUB_STEP_SUMMARY
+        fi
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "### 🔗 Quick Links" >> $GITHUB_STEP_SUMMARY
+        echo "- [Download Artifacts](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})" >> $GITHUB_STEP_SUMMARY
+        if [ "${{ github.event.inputs.save_to_repo }}" == "true" ]; then
+          echo "- [View Results Branch](https://github.com/${{ github.repository }}/tree/crawl-data)" >> $GITHUB_STEP_SUMMARY
+        fi

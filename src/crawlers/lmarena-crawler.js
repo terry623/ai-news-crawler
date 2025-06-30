@@ -60,15 +60,16 @@ class LMArenaCrawler extends BaseCrawler {
 
   normalizeCategoryName(heading) {
     const mapping = {
+      "text-to-image": "textToImage",
       text: "text",
       webdev: "webdev",
       vision: "vision",
       search: "search",
       copilot: "copilot",
-      "text-to-image": "textToImage",
     };
 
     const normalizedHeading = heading.toLowerCase();
+    // 先檢查更具體的匹配（text-to-image），再檢查一般的匹配（text）
     for (const [key, value] of Object.entries(mapping)) {
       if (normalizedHeading.includes(key)) {
         return value;

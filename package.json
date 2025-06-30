@@ -1,0 +1,28 @@
+{
+  "name": "ai-news-crawler",
+  "version": "1.0.0",
+  "description": "A crawler for LLM leaderboards that extracts rankings and saves them as JSON",
+  "main": "src/index.js",
+  "scripts": {
+    "crawl": "node src/index.js",
+    "crawl:lmarena": "node src/index.js --site=lmarena",
+    "crawl:all": "node src/index.js --all",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "crawler",
+    "llm",
+    "leaderboard",
+    "ai",
+    "scraping"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "crawlee": "^3.7.3",
+    "cheerio": "^1.0.0-rc.12"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  }
+}
